@@ -8,9 +8,11 @@ import fr.uga.l3miage.library.service.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +39,7 @@ public class BooksController {
     }
 
     @GetMapping("/books")
+    @ResponseStatus(HttpStatus.OK)
     public Collection<BookDTO> books(@RequestParam("q") String query) {
         Collection<Book> books;
         if (query == null) {
@@ -50,6 +53,7 @@ public class BooksController {
     }
 
     @GetMapping("/books/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public BookDTO book(Long id) {
         try{
             Book book = this.bookService.get(id);
@@ -85,13 +89,31 @@ public class BooksController {
         
     }
 
+    @PutMapping("/books/{id}/authors")
+    @ResponseStatus(HttpStatus.OK)
     public BookDTO updateBook(Long authorId, BookDTO book) {
         // attention BookDTO.id() doit être égale à id, sinon la requête utilisateur est mauvaise
-        return null;
+        if(book.id() == authorId){
+            return null;
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public void deleteBook(Long id) {
+    @DeleteMapping("/books/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@PathVariable("id") Long id) {
+        try{
+            this.authorService.get(id);
+        } catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
 
+        try{
+            this.bookService.delete(id);
+        } catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void addAuthor(Long authorId, AuthorDTO author) {

@@ -40,6 +40,7 @@ public class AuthorsController {
     }
 
     @GetMapping("/authors")
+    @ResponseStatus(HttpStatus.OK)
     public Collection<AuthorDTO> authors(@RequestParam(value = "q", required = false) String query) {
         Collection<Author> authors;
         if (query == null) {
@@ -53,6 +54,7 @@ public class AuthorsController {
     }
 
     @GetMapping("/authors/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AuthorDTO author(@PathVariable("id") Long id) throws EntityNotFoundException {
         try{
             Author aut = this.authorService.get(id);
