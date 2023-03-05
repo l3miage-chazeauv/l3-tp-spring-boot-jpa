@@ -40,7 +40,7 @@ public class BooksController {
 
     @GetMapping("/books")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookDTO> books(@RequestParam("q") String query) {
+    public Collection<BookDTO> books(@RequestParam(value = "q", required = false) String query) {
         Collection<Book> books;
         if (query == null) {
             books = bookService.list();
@@ -89,7 +89,7 @@ public class BooksController {
         
     }
 
-    @PutMapping("/books/{id}/authors")
+    @PutMapping("/books/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BookDTO updateBook(@PathVariable("authorId") Long authorId, @RequestBody BookDTO book) {
         // attention BookDTO.id() doit être égale à id, sinon la requête utilisateur est mauvaise
