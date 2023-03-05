@@ -54,7 +54,7 @@ public class BooksController {
 
     @GetMapping("/books/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookDTO book(Long id) {
+    public BookDTO book(@PathVariable("id") Long id) {
         try{
             Book book = this.bookService.get(id);
 
@@ -91,7 +91,7 @@ public class BooksController {
 
     @PutMapping("/books/{id}/authors")
     @ResponseStatus(HttpStatus.OK)
-    public BookDTO updateBook(Long authorId, BookDTO book) {
+    public BookDTO updateBook(@PathVariable("authorId") Long authorId, @RequestBody BookDTO book) {
         // attention BookDTO.id() doit être égale à id, sinon la requête utilisateur est mauvaise
         if(book.id() == authorId){
             return null;
